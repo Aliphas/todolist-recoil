@@ -4,8 +4,7 @@ import todoListFilterState, { filteredTodoListState } from "./state"
 const TodoListFilters = () => {
   const [filter, setFilter] = useRecoilState(todoListFilterState)
   const updateFilter = ({target: {value}}) => {
-    //setFilter(value);
-    console.log(filter)
+    setFilter(value);
   }
   return (
     <>
