@@ -1,10 +1,11 @@
 import { useRecoilState } from "recoil";
-import todoListState from './state'
+import todoListState, { activeIndex } from './state'
 
 const TodoItem = ({item}) => {
   const [todoList, setTodoList] = useRecoilState(todoListState);
+  const [editableIndex, setEditableIndex] = useRecoilState(activeIndex);
   const index = todoList.findIndex((listItem) => listItem === item);
-
+  
   const editItemText = ({target: {value}}) => {
     const newList = replaceItemAtIndex(todoList, index, {
       ...item,
@@ -19,10 +20,14 @@ const TodoItem = ({item}) => {
     })
     setTodoList(newList)
   }
+  const toggleEditable = (index) => {
+    setEditableIndex(index)
+  }
   const deleteItem = () => {
     const newList = removeItemAtIndex(todoList, index)
     setTodoList(newList)
   }
+  
   return (
     <div>
       <input
@@ -30,8 +35,16 @@ const TodoItem = ({item}) => {
         checked={item.isComplete}
         onChange={toggleItemCompletion}
       />
-      <input type="text" value={item.text} onChange={editItemText} />
-      <button onClick={deleteItem}>X</button>
+      {editableIndex === index? 
+      <>
+        <input type="text" value={item.text} onChange={editItemText}/>
+        <button type='submit' onClick={() => toggleEditable(-1)}>Confirm</button>
+      </>
+      :<>
+        <div style={{display:'inline-block'}} onClick={() => toggleEditable(index)}>{item.text}</div>
+        <button onClick={deleteItem}>X</button>
+      </>
+    }
     </div> 
   )
 }
